@@ -2,6 +2,11 @@
   "name": "url-shortner",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "start": "bun run index.ts",
+    "dev": "bun run --watch index.ts",
+    "db:migrate": "bun run migrations/migrate.ts"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
