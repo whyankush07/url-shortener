@@ -3,13 +3,18 @@ import { URLShortener } from './lld/Shortener';
 import { Controller } from './controller';
 import { PG } from './db/pg';
 import { IdGenerator } from './lld/id-generator';
+import { Cache } from './cache/redis';
+import { loadConfig } from "./config/config"
 
 const app = express();
 
+const cfg = loadConfig();
+
 const generator = new IdGenerator();
-const shortener = new URLShortener("https://tiny.url");
-const db = new PG("postgresql://username:password@localhost:5432/mydatabase");
-const controller = new Controller(db.client, shortener, generator);
+const shortener = new URLShortener(cfg.baseUrl);
+const db = new PG(cfg.pgUrl);
+const cache = new Cache(cfg.redisUrl);
+const controller = new Controller(db.client, cache.get(), shortener, generator);
 
 app.get('/api/v1', (req, res) => {
     try {
